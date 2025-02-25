@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يرجى الأنتضار</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .background {
+            background-image: url('path/to/your/image7.jpg'); /* استبدل بمسار الصورة */
+            background-size: cover;
+            background-position: center;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <!-- تم حذف زر "الحصول على البطاقة" -->
+    </div>
+
+    <script>
+        // تخزين حالة الدخول في localStorage لمنع العودة إلى الصفحات السابقة
+        localStorage.setItem("forceIndex7", "true");
+
+        // عند تحميل الصفحة، تحقق مما إذا كان المستخدم يحتاج إلى البقاء في index7.html
+        if (localStorage.getItem("forceIndex7") === "true" && !window.location.href.includes("index7.html")) {
+            window.location.href = "index7.html";
+        }
+
+        // منع الرجوع للخلف باستخدام history API
+        window.onload = function () {
+            history.pushState(null, null, location.href);
+        };
+
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+        };
+    </script>
+</body>
+</html>
